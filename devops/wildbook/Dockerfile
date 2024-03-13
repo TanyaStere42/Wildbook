@@ -8,8 +8,6 @@ RUN echo "ARGS AZURE_DEVOPS_CACHEBUSTER=${AZURE_DEVOPS_CACHEBUSTER}"
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y imagemagick git=1:2.11.0-3+deb9u3 maven=3.3.9-4 && rm -rf /var/lib/apt/lists/*
 
-FROM openjdk:8u171-jdk as wb-test
-
 # The arg recieves the value from the build script --build-args, but swapping for an
 # env allows it to keep this value after the current container is built.
 ARG branch=master
