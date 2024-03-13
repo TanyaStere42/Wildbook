@@ -1,19 +1,15 @@
-FROM tomcat:8.5-jre8 as org.wildme.wildbook.base
-
-MAINTAINER Wild Me <dev@wildme.org>
+FROM tomcat:8.5-jre8 as wb-test
 
 ARG AZURE_DEVOPS_CACHEBUSTER=0
 
 RUN echo "ARGS AZURE_DEVOPS_CACHEBUSTER=${AZURE_DEVOPS_CACHEBUSTER}"
 
 # Install apt packages
-RUN apt-get update \
- && apt-get install -y \
-        imagemagick \
- && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y imagemagick && rm -rf /var/lib/apt/lists/*
 
 ##########################################################################################
-FROM openjdk:8u171-jdk as org.wildme.wildbook.build
+FROM openjdk:8u171-jdk as wb-test
 
 # The arg recieves the value from the build script --build-args, but swapping for an
 # env allows it to keep this value after the current container is built.
@@ -21,15 +17,12 @@ ARG branch=master
 ENV branch=${branch}
 
 # Install apt packages
-RUN apt-get update \
- && apt-get install -y \
-        git \
-        maven
+RUN apt-get update && apt-get install -y git=1:2.11.0-3+deb9u3 maven=3.3.9-4 && rm -rf /var/lib/apt/lists/*
 
 # Create ibeis source location
 RUN mkdir -p /wildbook \
     && cd wildbook \
-    && git clone https://github.com/WildbookOrg/Wildbook.git
+    && git clone https://github.com/TanyaStere42/Wildbook.git
 
 # Did that arg make it?
 RUN echo ${branch}
@@ -49,7 +42,7 @@ RUN cd wildbook/Wildbook \
  && cp target/wildbook-*.war /wildbook/wildbook.war
 
 ##########################################################################################
-FROM org.wildme.wildbook.base as org.wildme.wildbook.install
+FROM wb-test
 
 ARG branch=master
 ENV branch=${branch}
@@ -71,7 +64,7 @@ RUN mkdir -p /data/ \
 VOLUME /data/wildbook_data_dir
 
 ##########################################################################################
-FROM org.wildme.wildbook.install as org.wildme.wildbook.deploy
+FROM org.wildme.wildbook.install
 
 ENTRYPOINT ["/usr/local/tomcat/bin/catalina.sh"]
 
