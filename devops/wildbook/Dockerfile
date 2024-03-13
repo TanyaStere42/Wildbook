@@ -5,7 +5,6 @@ ARG AZURE_DEVOPS_CACHEBUSTER=0
 RUN echo "ARGS AZURE_DEVOPS_CACHEBUSTER=${AZURE_DEVOPS_CACHEBUSTER}"
 
 # Install apt packages
-ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y imagemagick && rm -rf /var/lib/apt/lists/*
 
 FROM openjdk:8u171-jdk as wb-test
@@ -15,7 +14,6 @@ ARG branch=master
 ENV branch=${branch}
 
 # Install apt packages
-ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y git maven && rm -rf /var/lib/apt/lists/*
 
 # Create Wildbook source location
