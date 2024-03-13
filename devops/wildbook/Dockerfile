@@ -6,12 +6,17 @@ RUN echo "ARGS AZURE_DEVOPS_CACHEBUSTER=${AZURE_DEVOPS_CACHEBUSTER}"
 
 # Install apt packages
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y imagemagick git maven && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y imagemagick && rm -rf /var/lib/apt/lists/*
 
+FROM openjdk:8u171-jdk as wb-test
 # The arg recieves the value from the build script --build-args, but swapping for an
 # env allows it to keep this value after the current container is built.
 ARG branch=master
 ENV branch=${branch}
+
+# Install apt packages
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y git maven && rm -rf /var/lib/apt/lists/*
 
 # Create Wildbook source location
 RUN mkdir -p /wildbook && cd wildbook && git clone https://github.com/TanyaStere42/Wildbook.git
