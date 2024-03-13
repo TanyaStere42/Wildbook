@@ -29,7 +29,7 @@ COPY ./_config/${branch}/jdoconfig.properties /wildbook/Wildbook/src/main/resour
 COPY ./_config/${branch}/commonConfiguration.properties /wildbook/Wildbook/src/main/resources/bundles/commonConfiguration.properties
 
 # Build and move the war file, skipping tests and other verbosity
-RUN mvn clean install && cp target/wildbook-*.war /wildbook/wildbook.war
+RUN cd wildbook/Wildbook && mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -B && cp target/wildbook-*.war /wildbook/wildbook.war
 
 ##########################################################################################
 FROM wb-test
