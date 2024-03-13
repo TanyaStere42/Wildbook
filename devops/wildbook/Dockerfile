@@ -23,9 +23,8 @@ ENV branch=${branch}
 # Install apt packages
 RUN apt-get update \
  && apt-get install -y \
-        git=1:2.11.0-3+deb9u3 \
-        maven=3.3.9-4 \
- && rm -rf /var/lib/apt/lists/*
+        git \
+        maven
 
 # Create ibeis source location
 RUN mkdir -p /wildbook \
