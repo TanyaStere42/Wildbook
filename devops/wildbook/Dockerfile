@@ -64,7 +64,7 @@ RUN mkdir -p /data/ \
 VOLUME /data/wildbook_data_dir
 
 ##########################################################################################
-FROM org.wildme.wildbook.install
+FROM wb-test
 
 ENTRYPOINT ["/usr/local/tomcat/bin/catalina.sh"]
 
